@@ -6,12 +6,14 @@ import {
   Text,
   View,
   Alert,
+  Vibration,
 } from "react-native";
 import { useEffect, useState } from "react";
 
 /* Importando os recursos nativos da Api Móvel */
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
 
 export default function App() {
   /*  State tradicional para armazenar a refêrencia da foto(quando existir) */
@@ -78,6 +80,10 @@ export default function App() {
     }
   };
 
+  const compartilharFoto = async () => {
+    await Sharing.shareAsync(foto);
+  };
+
   return (
     <>
       <StatusBar />
@@ -92,7 +98,10 @@ export default function App() {
 
         <Button onPress={acessarCamera} title="Tirar uma nova foto" />
         {foto ? (
-          <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
+          <>
+            <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
+            <Button onPress={compartilharFoto} title="Compartilhar Foto" />
+          </>
         ) : (
           <Text>Você Ainda não Escolheu uma foto</Text>
         )}
