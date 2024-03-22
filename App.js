@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 
-/* Importando os recursos nativos */
+/* Importando os recursos nativos da Api Móvel */
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 
 export default function App() {
   /*  State tradicional para armazenar a refêrencia da foto(quando existir) */
@@ -71,6 +72,8 @@ export default function App() {
     console.log(imagem);
 
     if (!imagem.canceled) {
+      /* Usando a Api media library para salvar o armazenamento físico do dispositivo */
+      await MediaLibrary.saveToLibraryAsync(imagem.assets[0].uri);
       setFoto(imagem.assets[0].uri);
     }
   };
