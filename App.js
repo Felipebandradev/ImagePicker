@@ -11,6 +11,36 @@ export default function App() {
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
   console.log(status);
 
+  /* Ao entrar no app, será executada a verificação de perimssões de uso  */
+  useEffect(() => {
+    /*  Esta função mostrará um popup para o usuário perguntando
+    se ele autoriza a utilização do recurso móvel (no caso, selecionar/tirar foto). */
+    async function verificaPermissoes() {
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+
+      /*  Ele dando autorização (granted), isso será armazenado
+      no state de requestPermission. */
+
+      requestPermission(cameraStatus === "granted");
+    }
+
+    verificaPermissoes();
+  }, []);
+
+  const escolherFoto = async () => {
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!resultado.canceled) {
+      setFoto(resultado.assets[0].uri);
+    }
+  };
+
+  console.log(foto);
   return (
     <>
       <StatusBar />
@@ -21,7 +51,7 @@ export default function App() {
           justifyContent: "center",
         }}
       >
-        <Button title="Escolher Foto" />
+        <Button onPress={escolherFoto} title="Escolher Foto" />
         <Image style={{ width: 300, height: 300 }} />
       </View>
     </>
