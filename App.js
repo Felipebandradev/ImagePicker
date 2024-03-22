@@ -60,6 +60,21 @@ export default function App() {
   };
 
   console.log(foto);
+
+  const acessarCamera = async () => {
+    const imagem = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      aspect: [16, 9],
+      quality: 0.5,
+    });
+
+    console.log(imagem);
+
+    if (!imagem.canceled) {
+      setFoto(imagem.assets[0].uri);
+    }
+  };
+
   return (
     <>
       <StatusBar />
@@ -71,6 +86,8 @@ export default function App() {
         }}
       >
         <Button onPress={escolherFoto} title="Escolher Foto" />
+
+        <Button onPress={acessarCamera} title="Tirar uma nova foto" />
         {foto ? (
           <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
         ) : (
