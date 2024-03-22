@@ -1,4 +1,12 @@
-import { Image, Button, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Button,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+} from "react-native";
 import { useEffect, useState } from "react";
 
 /* Importando os recursos nativos */
@@ -27,7 +35,16 @@ export default function App() {
     verificaPermissoes();
   }, []);
 
+  /* Ao pressionar o botão, executa esta função: */
   const escolherFoto = async () => {
+    if (!status === "granted") {
+      Alert.alert("Permissão Imagem negada");
+      return;
+    }
+
+    /* Acessando via ImagePicker a biblioteca 
+    para seleção de apenas imagens, com recurso de edição habilitado,
+    proporção 16,9 e qualidade total. */
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -35,6 +52,8 @@ export default function App() {
       quality: 1,
     });
 
+    /* Se o usuário não cancelar a operação, pegamos a 
+    imagem e colocamos no state */
     if (!resultado.canceled) {
       setFoto(resultado.assets[0].uri);
     }
@@ -52,7 +71,11 @@ export default function App() {
         }}
       >
         <Button onPress={escolherFoto} title="Escolher Foto" />
-        <Image style={{ width: 300, height: 300 }} />
+        {foto ? (
+          <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
+        ) : (
+          <Text>Você Ainda não Escolheu uma foto</Text>
+        )}
       </View>
     </>
   );
